@@ -28,31 +28,6 @@ INSERT INTO Movie(mov_id, mov_title, mov_year, mov_time, mov_lang, mov_dt_rel, m
 (927,'Spirited Away',2001,125,'Japanese','2003-09-12','UK'),
 (928,'Back to the Future',1985,116,'English','1985-12-04','UK');
 
-INSERT INTO Movie_cast(act_id, mov_id, role) VALUES
-(101,901,'John Scottie Ferguson'),
-(102,902,'Miss Giddens'),
-(103,903,'T.E. Lawrence'),
-(104,904,'Michael'),
-(105,905,'Antonio Salieri'),
-(106,906,'Rick Deckard'),
-(107,907,'Alice Harford'),
-(108,908,'McManus'),
-(110,910,'Eddie Adams'),
-(111,911,'Alvy Singer'),
-(112,912,'San'),
-(113,913,'Andy Dufresne'),
-(114,914,'Lester Burnham'),
-(115,915,'Rose DeWitt Bukater'),
-(116,916,'Sean Maguire'),
-(117,917,'Ed'),
-(118,918,'Renton'),
-(120,920,'Elizabeth Darko'),
-(121,921,'Older Jamal'),
-(122,922,'Ripley'),
-(114,923,'Bobby Darin'),
-(109,909,'J.J. Gittes'),
-(119,919,'Alfred Borden');
-
 INSERT INTO Actor(act_id, act_fname, act_lname, act_gender) VALUES
 (101,'James','Stewart','M'),
 (102,'Deborah','Kerr','F'),
@@ -94,27 +69,6 @@ INSERT INTO Genres(gen_id, gen_title) VALUES
 (1012,'Thriller'),
 (1013,'War');
 
-INSERT INTO Movie_genres(mov_id, gen_id) VALUES
-(922,1001),
-(917,1002),
-(903,1002),
-(912,1003),
-(911,1005),
-(908,1006),
-(913,1006),
-(926,1007),
-(928,1007),
-(918,1007),
-(921,1007),
-(902,1008),
-(923,1009),
-(907,1010),
-(927,1010),
-(901,1010),
-(914,1011),
-(906,1012),
-(904,1013);
-
 INSERT INTO Director(dir_id, dir_fname, dir_lname) VALUES
 (201,'Alfred','Hitchcock'),
 (202,'Jack','Clayton'),
@@ -140,13 +94,6 @@ INSERT INTO Director(dir_id, dir_fname, dir_lname) VALUES
 (222,'Andrei','Tarkovsky'),
 (223,'Peter','Jackson');
 
-INSERT INTO Movie_direction(dir_id, mov_id) VALUES
-(201,901),(202,902),(203,903),(204,904),(205,905),
-(206,906),(207,907),(208,908),(209,909),(210,910),
-(211,911),(212,912),(213,913),(214,914),(215,915),
-(216,916),(217,917),(218,918),(219,919),(220,920),
-(218,921),(215,922),(221,923);
-
 INSERT INTO Reviewer(rev_id, rev_name) VALUES
 (9001,'Righty Sock'),
 (9002,'Jack Malvern'),
@@ -169,6 +116,34 @@ INSERT INTO Reviewer(rev_id, rev_name) VALUES
 (9019,'Brandt Sponseller'),
 (9020,'Richard Adams');
 
+INSERT INTO Movie_genres(mov_id, gen_id) VALUES
+(922,1001),
+(917,1002),
+(903,1002),
+(912,1003),
+(911,1005),
+(908,1006),
+(913,1006),
+(926,1007),
+(928,1007),
+(918,1007),
+(921,1007),
+(902,1008),
+(923,1009),
+(907,1010),
+(927,1010),
+(901,1010),
+(914,1011),
+(906,1012),
+(904,1013);
+
+INSERT INTO Movie_direction(dir_id, mov_id) VALUES
+(201,901),(202,902),(203,903),(204,904),(205,905),
+(206,906),(207,907),(208,908),(209,909),(210,910),
+(211,911),(212,912),(213,913),(214,914),(215,915),
+(216,916),(217,917),(218,918),(219,919),(220,920),
+(218,921),(215,922),(221,923);
+
 INSERT INTO Rating(mov_id, rev_id, rev_stars, num_o_ratings) VALUES
 (901,9001,8.4,263575),
 (902,9002,7.9,20207),
@@ -189,3 +164,28 @@ INSERT INTO Rating(mov_id, rev_id, rev_stars, num_o_ratings) VALUES
 (921,9018,8.0,667758),
 (922,9019,8.4,511613),
 (923,9020,6.7,13091);
+
+INSERT INTO Movie_cast(act_id, mov_id, role) VALUES
+(101,901,'John Scottie Ferguson'),
+(102,902,'Miss Giddens'),
+(103,903,'T.E. Lawrence'),
+(104,904,'Michael'),
+(105,905,'Antonio Salieri'),
+(106,906,'Rick Deckard'),
+(107,907,'Alice Harford'),
+(108,908,'McManus'),
+(110,910,'Eddie Adams'),
+(111,911,'Alvy Singer'),
+(112,912,'San'),
+(113,913,'Andy Dufresne'),
+(114,914,'Lester Burnham'),
+(115,915,'Rose DeWitt Bukater'),
+(116,916,'Sean Maguire'),
+(117,917,'Ed'),
+(118,918,'Renton'),
+(120,920,'Elizabeth Darko'),
+(121,921,'Older Jamal'),
+(122,922,'Ripley'),
+(114,923,'Bobby Darin'),
+(109,909,'J.J. Gittes'),
+(119,919,'Alfred Borden');
