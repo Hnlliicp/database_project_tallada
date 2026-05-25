@@ -96,17 +96,17 @@ VALUES
 -- spread across different dates for daily sales queries
 INSERT INTO Orders (customer_id, order_date, fulfillment_type, status, total_amount)
 VALUES
-(1, '2026-05-20 10:30:00', 'Pickup', 'Completed', 194.00),
-(2, '2026-05-20 11:45:00', 'Pickup', 'Completed', 278.00),
+(1, '2026-05-20 10:30:00', 'Delivery', 'Completed', 194.00),
+(2, '2026-05-20 11:45:00', 'Delivery', 'Completed', 278.00),
 (3, '2026-05-20 13:00:00', 'Delivery', 'Completed', 174.00),
-(4, '2026-05-21 09:15:00', 'Pickup', 'Completed', 249.00),
+(4, '2026-05-21 09:15:00', 'Delivery', 'Completed', 249.00),
 (5, '2026-05-21 12:30:00', 'Delivery', 'Completed', 338.00),
-(6, '2026-05-22 10:00:00', 'Pickup', 'Completed', 149.00),
+(6, '2026-05-22 10:00:00', 'Delivery', 'Completed', 149.00),
 (7, '2026-05-22 14:00:00', 'Delivery', 'Completed', 234.00),
-(8, '2026-05-23 11:00:00', 'Pickup', 'Completed', 189.00),
+(8, '2026-05-23 11:00:00', 'Delivery', 'Completed', 189.00),
 (1, '2026-05-23 13:30:00', 'Delivery', 'Completed', 294.00),
-(2, '2026-05-24 10:00:00', 'Pickup', 'Completed', 149.00),
-(3, '2026-05-24 15:00:00', 'Pickup', 'Completed', 89.00),
+(2, '2026-05-24 10:00:00', 'Delivery', 'Completed', 149.00),
+(3, '2026-05-24 15:00:00', 'Delivery', 'Completed', 89.00),
 (4, '2026-05-25 09:00:00', 'Delivery', 'Pending', 338.00);
 
 -- ORDER_ITEMS
