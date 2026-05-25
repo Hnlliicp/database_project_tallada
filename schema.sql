@@ -1,96 +1,130 @@
-
-CREATE TABLE Movie (
-    mov_id INTEGER PRIMARY KEY,
-    mov_title VARCHAR(300) NOT NULL,
-    mov_year INTEGER,
-    mov_time INTEGER,
-    mov_lang VARCHAR(120),
-    mov_dt_rel DATE,
-    mov_rel_country VARCHAR(30)
+CREATE TABLE Customer (
+    customer_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    contact_number VARCHAR(20),
+    complete_address TEXT
 );
 
-CREATE TABLE Actor (
-    act_id INTEGER PRIMARY KEY,
-    act_fname VARCHAR(50) NOT NULL,
-    act_lname VARCHAR(50) NOT NULL,
-    act_gender CHAR(1)
+CREATE TABLE Product (
+    product_id SERIAL PRIMARY KEY,
+    product_name VARCHAR(100) NOT NULL,
+    category VARCHAR(50),
+    price DECIMAL(10,2) NOT NULL,
+    description TEXT,
+    availability_status VARCHAR(20) DEFAULT 'Available'
 );
 
-CREATE TABLE Genres (
-    gen_id INTEGER PRIMARY KEY,
-    gen_title VARCHAR(300) NOT NULL
-);
+CREATE TABLE Orders (
+    order_id SERIAL PRIMARY KEY,
+    customer_id INTEGER,
 
-CREATE TABLE Director (
-    dir_id INTEGER PRIMARY KEY,
-    dir_fname VARCHAR(50) NOT NULL,
-    dir_lname VARCHAR(50) NOT NULL
-);
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    fulfillment_type VARCHAR(30),
+    status VARCHAR(30) DEFAULT 'Pending',
+    total_amount DECIMAL(10,2),
 
-CREATE TABLE Reviewer (
-    rev_id INTEGER PRIMARY KEY,
-    rev_name VARCHAR(100)
-);
-
-CREATE TABLE Movie_cast (
-    act_id INTEGER,
-    mov_id INTEGER,
-    role VARCHAR(200),
-
-    PRIMARY KEY (act_id, mov_id),
-
-    FOREIGN KEY (act_id)
-        REFERENCES Actor(act_id)
-        ON DELETE CASCADE,
-
-    FOREIGN KEY (mov_id)
-        REFERENCES Movie(mov_id)
+    FOREIGN KEY (customer_id)
+        REFERENCES Customer(customer_id)
         ON DELETE CASCADE
 );
 
-CREATE TABLE Movie_genres (
-    mov_id INTEGER,
-    gen_id INTEGER,
+CREATE TABLE Order_Items (
+    order_item_id SERIAL PRIMARY KEY,
 
-    PRIMARY KEY (mov_id, gen_id),
+    order_id INTEGER,
+    product_id INTEGER,
 
-    FOREIGN KEY (mov_id)
-        REFERENCES Movie(mov_id)
+    quantity INTEGER NOT NULL,
+    subtotal DECIMAL(10,2),
+
+    FOREIGN KEY (order_id)
+        REFERENCES Orders(order_id)
         ON DELETE CASCADE,
 
-    FOREIGN KEY (gen_id)
-        REFERENCES Genres(gen_id)
+    FOREIGN KEY (product_id)
+        REFERENCES Product(product_id)
         ON DELETE CASCADE
 );
 
-CREATE TABLE Movie_direction (
-    dir_id INTEGER,
-    mov_id INTEGER,
+CREATE TABLE Payment (
+    payment_id SERIAL PRIMARY KEY,
 
-    PRIMARY KEY (dir_id, mov_id),
+    order_id INTEGER UNIQUE,
 
-    FOREIGN KEY (dir_id)
-        REFERENCES Director(dir_id)
-        ON DELETE CASCADE,
+    payment_method VARCHAR(50),
+    amount_received DECIMAL(10,2),
+    change_due DECIMAL(10,2),
+    payment_status VARCHAR(30),
 
-    FOREIGN KEY (mov_id)
-        REFERENCES Movie(mov_id)
+    FOREIGN KEY (order_id)
+        REFERENCES Orders(order_id)
         ON DELETE CASCADE
 );
 
-CREATE TABLE Rating (
-    mov_id INTEGER,
-    rev_id INTEGER,
-    rev_stars DECIMAL(3,1),
-    num_o_ratings INTEGER,
+CREATE TABLE Inventory (
+    inventory_id SERIAL PRIMARY KEY,
 
-    PRIMARY KEY (mov_id, rev_id),
+    ingredient_name VARCHAR(100) NOT NULL,
+    category VARCHAR(50),
+    unit_of_measurement VARCHAR(30),
 
-    FOREIGN KEY (mov_id)
-        REFERENCES Movie(mov_id)
+    stock_quantity DECIMAL(10,2),
+    reorder_level DECIMAL(10,2)
+);
+
+CREATE TABLE Product_Ingredient (
+    product_ingredient_id SERIAL PRIMARY KEY,
+
+    product_id INTEGER,
+    inventory_id INTEGER,
+
+    quantity_required DECIMAL(10,2),
+
+    FOREIGN KEY (product_id)
+        REFERENCES Product(product_id)
         ON DELETE CASCADE,
 
-    FOREIGN KEY (rev_id)
-        REFERENCES Reviewer(rev_id)
+    FOREIGN KEY (inventory_id)
+        REFERENCES Inventory(inventory_id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE Supplier (
+    supplier_id SERIAL PRIMARY KEY,
+
+    supplier_name VARCHAR(100) NOT NULL,
+    contact_number VARCHAR(20)
+);
+
+CREATE TABLE Purchase_Order (
+    purchase_order_id SERIAL PRIMARY KEY,
+
+    supplier_id INTEGER,
+
+    purchase_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    total_amount DECIMAL(10,2),
+    status VARCHAR(30),
+
+    FOREIGN KEY (supplier_id)
+        REFERENCES Supplier(supplier_id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE Purchase_Order_Items (
+    purchase_order_item_id SERIAL PRIMARY KEY,
+
+    purchase_order_id INTEGER,
+    inventory_id INTEGER,
+
+    quantity DECIMAL(10,2),
+    unit_cost DECIMAL(10,2),
+    subtotal DECIMAL(10,2),
+
+    FOREIGN KEY (purchase_order_id)
+        REFERENCES Purchase_Order(purchase_order_id)
+        ON DELETE CASCADE,
+
+    FOREIGN KEY (inventory_id)
+        REFERENCES Inventory(inventory_id)
         ON DELETE CASCADE
 );
