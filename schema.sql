@@ -90,15 +90,27 @@ CREATE TABLE Payment (
         ON DELETE CASCADE
 );
 
+CREATE TABLE Supplier (
+    supplier_id SERIAL PRIMARY KEY,
+
+    supplier_name VARCHAR(100) NOT NULL,
+    contact_number VARCHAR(20)
+);
+
 CREATE TABLE Inventory (
     inventory_id SERIAL PRIMARY KEY,
+    supplier_id INTEGER,
 
     ingredient_name VARCHAR(100) NOT NULL,
     category VARCHAR(50),
     unit_of_measurement VARCHAR(30),
 
     stock_quantity DECIMAL(10,2),
-    reorder_level DECIMAL(10,2)
+    reorder_level DECIMAL(10,2),
+
+    FOREIGN KEY(supplier_id)
+        REFERENCES Supplier(supplier_id)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE Product_Ingredient (
@@ -116,13 +128,6 @@ CREATE TABLE Product_Ingredient (
     FOREIGN KEY (inventory_id)
         REFERENCES Inventory(inventory_id)
         ON DELETE CASCADE
-);
-
-CREATE TABLE Supplier (
-    supplier_id SERIAL PRIMARY KEY,
-
-    supplier_name VARCHAR(100) NOT NULL,
-    contact_number VARCHAR(20)
 );
 
 CREATE TABLE Purchase_Order (
@@ -155,5 +160,18 @@ CREATE TABLE Purchase_Order_Items (
 
     FOREIGN KEY (inventory_id)
         REFERENCES Inventory(inventory_id)
+        ON DELETE CASCADE
+);
+
+CREATE TABLE Delivery (
+    delivery_id SERIAL PRIMARY KEY,
+    order_id INTEGER UNIQUE,
+    courier_type VARCHAR(50),
+    delivery_address TEXT,
+    delivery_status VARCHAR(30),
+    delivery_fee DECIMAL(10,2),
+    
+    FOREIGN KEY (order_id)
+        REFERENCES Orders(order_id)
         ON DELETE CASCADE
 );
