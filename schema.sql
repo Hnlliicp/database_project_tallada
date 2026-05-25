@@ -61,6 +61,13 @@ CREATE TABLE Payment (
         ON DELETE CASCADE
 );
 
+CREATE TABLE Supplier (
+    supplier_id SERIAL PRIMARY KEY,
+
+    supplier_name VARCHAR(100) NOT NULL,
+    contact_number VARCHAR(20)
+);
+
 CREATE TABLE Inventory (
     inventory_id SERIAL PRIMARY KEY,
     supplier_id INTEGER,
@@ -92,13 +99,6 @@ CREATE TABLE Product_Ingredient (
     FOREIGN KEY (inventory_id)
         REFERENCES Inventory(inventory_id)
         ON DELETE CASCADE
-);
-
-CREATE TABLE Supplier (
-    supplier_id SERIAL PRIMARY KEY,
-
-    supplier_name VARCHAR(100) NOT NULL,
-    contact_number VARCHAR(20)
 );
 
 CREATE TABLE Purchase_Order (
