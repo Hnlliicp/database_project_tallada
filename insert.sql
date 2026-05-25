@@ -4,6 +4,12 @@ VALUES
 ('Maria Santos', '09987654321', 'Bacoor, Cavite'),
 ('Carlo Reyes', '09175554444', 'Dasmarinas, Cavite');
 
+INSERT INTO Delivery_Service (service_name, contact_number, delivery_type)VALUES
+('GrabFood', 'N/A', 'Delivery'),
+('Foodpanda', 'N/A', 'Delivery'),
+('Lalamove', 'N/A', 'Delivery'),
+('Store Pickup', 'N/A', 'Take-Out');
+
 INSERT INTO Product (product_name, category, price, description, availability_status)
 VALUES
 ('2-PC Boneless Chicken Meal', 'Meals', 149.00, '2-piece boneless chicken with rice', 'Available'),
@@ -14,11 +20,11 @@ VALUES
 
 ('Coke Regular', 'Drinks', 45.00, 'Regular Coca-Cola drink', 'Available');
 
-INSERT INTO Orders (customer_id, fulfillment_type, status, total_amount)
+INSERT INTO Orders (customer_id, delivery_service_id, status, total_amount)
 VALUES
-(1, 'Dine-In', 'Completed', 194.00),
-(2, 'Take-Out', 'Completed', 278.00),
-(3, 'Delivery', 'Pending', 174.00);
+(1, 1, 'Completed', 194.00),
+(2, 1, 'Completed', 278.00),
+(3, 1, 'Pending', 174.00);
 
 INSERT INTO Order_Items (order_id, product_id, quantity, subtotal)
 VALUES

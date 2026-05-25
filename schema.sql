@@ -1,3 +1,20 @@
+DROP TABLE IF EXISTS Purchase_Order_Items CASCADE;
+DROP TABLE IF EXISTS Purchase_Order CASCADE;
+DROP TABLE IF EXISTS Supplier CASCADE;
+
+DROP TABLE IF EXISTS Product_Ingredient CASCADE;
+DROP TABLE IF EXISTS Inventory CASCADE;
+
+DROP TABLE IF EXISTS Payment CASCADE;
+
+DROP TABLE IF EXISTS Order_Items CASCADE;
+DROP TABLE IF EXISTS Orders CASCADE;
+
+DROP TABLE IF EXISTS Delivery_Service CASCADE;
+
+DROP TABLE IF EXISTS Product CASCADE;
+DROP TABLE IF EXISTS Customer CASCADE;
+
 CREATE TABLE Customer (
     customer_id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
@@ -5,7 +22,15 @@ CREATE TABLE Customer (
     complete_address TEXT
 );
 
-CREATE TABLE Product (
+CREATE TABLE Delivery_Service (
+    delivery_service_id SERIAL PRIMARY KEY,
+
+    service_name VARCHAR(50) NOT NULL,
+    contact_number VARCHAR(20),
+    delivery_type VARCHAR(30)
+);
+
+CREATE TABLE Product (  
     product_id SERIAL PRIMARY KEY,
     product_name VARCHAR(100) NOT NULL,
     category VARCHAR(50),
@@ -17,14 +42,18 @@ CREATE TABLE Product (
 CREATE TABLE Orders (
     order_id SERIAL PRIMARY KEY,
     customer_id INTEGER,
+    delivery_service_id INTEGER,
 
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    fulfillment_type VARCHAR(30),
     status VARCHAR(30) DEFAULT 'Pending',
     total_amount DECIMAL(10,2),
 
     FOREIGN KEY (customer_id)
         REFERENCES Customer(customer_id)
+        ON DELETE CASCADE,
+    
+    FOREIGN KEY (delivery_service_id)
+        REFERENCES Delivery_Service(delivery_service_id)
         ON DELETE CASCADE
 );
 
