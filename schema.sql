@@ -63,6 +63,7 @@ CREATE TABLE Payment (
 
 CREATE TABLE Inventory (
     inventory_id SERIAL PRIMARY KEY,
+    supplier_id INTEGER,
 
     ingredient_name VARCHAR(100) NOT NULL,
     category VARCHAR(50),
@@ -70,6 +71,10 @@ CREATE TABLE Inventory (
 
     stock_quantity DECIMAL(10,2),
     reorder_level DECIMAL(10,2)
+
+    FOREIGN KEY(supplier_id)
+        REFERENCES Supplier(supplier_id)
+        ON DELETE CASCADE
 );
 
 CREATE TABLE Product_Ingredient (
