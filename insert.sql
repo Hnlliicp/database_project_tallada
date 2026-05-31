@@ -162,10 +162,18 @@ VALUES
 (12, 'COD',             0.00,  0.00, 'Pending');
 
 -- DELIVERY
-INSERT INTO Delivery (order_id, service_name, contact_number, delivery_type, courier_type, delivery_address, delivery_status, delivery_fee)
+INSERT INTO Delivery (order_id, service_name, contact_number, delivery_type, 
+courier_type, delivery_address, delivery_status, delivery_fee)
 VALUES
-(3,  'Own Rider', 'N/A', 'Delivery', 'Own Rider', 'Dasmarinas, Cavite',    'Delivered',       50.00),
-(5,  'Lalamove',  'N/A', 'Delivery', 'Lalamove',  'General Trias, Cavite', 'Delivered',       80.00),
-(7,  'Own Rider', 'N/A', 'Delivery', 'Own Rider', 'Bacoor, Cavite',        'Delivered',       50.00),
-(9,  'Own Rider', 'N/A', 'Delivery', 'Own Rider', 'Imus, Cavite',          'Delivered',       50.00),
-(12, 'Lalamove',  'N/A', 'Delivery', 'Lalamove',  'Dasmarinas, Cavite',    'Out for Delivery', 80.00);
+(1, 'Own Rider', 'N/A', 'Delivery', 'Own Rider', 'Imus, Cavite', 'Delivered', 50.00),
+(2, 'Own Rider', 'N/A', 'Delivery', 'Own Rider', 'Bacoor, Cavite', 'Delivered', 50.00),
+(3, 'Own Rider', 'N/A', 'Delivery', 'Own Rider', 'Dasmarinas, Cavite', 'Delivered', 50.00),
+(4, 'Own Rider', 'N/A', 'Delivery', 'Own Rider', 'Dasmarinas, Cavite', 'Delivered', 50.00),
+(5, 'Lalamove', 'N/A', 'Delivery', 'Lalamove', 'General Trias, Cavite', 'Delivered', 80.00),
+(6, 'Own Rider', 'N/A', 'Delivery', 'Own Rider', 'Imus, Cavite', 'Delivered', 50.00),
+(7, 'Own Rider', 'N/A', 'Delivery', 'Own Rider', 'Bacoor, Cavite', 'Delivered', 50.00),
+(8, 'Own Rider', 'N/A', 'Delivery', 'Own Rider', 'Dasmarinas, Cavite', 'Delivered', 50.00),
+(9, 'Own Rider', 'N/A', 'Delivery', 'Own Rider', 'Imus, Cavite', 'Delivered', 50.00),
+(10, 'Own Rider', 'N/A', 'Delivery', 'Own Rider', 'Bacoor, Cavite', 'Delivered', 50.00),
+(11, 'Own Rider', 'N/A', 'Delivery', 'Own Rider', 'Dasmarinas, Cavite', 'Delivered', 50.00),
+(12, 'Lalamove', 'N/A', 'Delivery', 'Lalamove', 'Dasmarinas, Cavite', 'Out for Delivery', 80.00);
