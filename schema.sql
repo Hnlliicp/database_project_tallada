@@ -40,7 +40,7 @@ CREATE TABLE Orders (
     customer_id INTEGER,
 
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    status VARCHAR(30) DEFAULT 'Pending',
+    status VARCHAR(30) DEFAULT 'Pending' CHECK (status IN ('Pending', 'Completed', 'Cancelled')),
     total_amount DECIMAL(10,2),
 
     FOREIGN KEY (customer_id)
@@ -72,7 +72,7 @@ CREATE TABLE Order_Items (
     order_id INTEGER,
     product_id INTEGER,
 
-    quantity INTEGER NOT NULL,
+    quantity INTEGER CHECK (quantity >= 1),
     subtotal DECIMAL(10,2),
 
     FOREIGN KEY (order_id)
@@ -171,3 +171,31 @@ CREATE TABLE Purchase_Order_Items (
         REFERENCES Inventory(inventory_id)
         ON DELETE CASCADE
 );
+
+-- INVENTORY DEDUCTION FUNCTION
+
+CREATE OR REPLACE FUNCTION deduct_inventory()
+RETURNS TRIGGER AS $$
+BEGIN
+
+    UPDATE Inventory
+    SET stock_quantity =
+        stock_quantity -
+        (Product_Ingredient.quantity_required * NEW.quantity)
+
+    FROM Product_Ingredient
+
+    WHERE Inventory.inventory_id = Product_Ingredient.inventory_id
+      AND Product_Ingredient.product_id = NEW.product_id;
+
+    RETURN NEW;
+
+END;
+$$ LANGUAGE plpgsql;
+
+-- INVENTORY DEDUCTION TRIGGER
+
+CREATE TRIGGER trg_deduct_inventory
+AFTER INSERT ON Order_Items
+FOR EACH ROW
+EXECUTE FUNCTION deduct_inventory();

@@ -206,3 +206,17 @@ JOIN Inventory i ON pi.inventory_id = i.inventory_id
 WHERE o.status = 'Completed'
 GROUP BY i.ingredient_name, i.unit_of_measurement, i.stock_quantity
 ORDER BY estimated_remaining ASC;
+
+-- Inventory Deduction Function Queries
+
+SELECT * FROM inventory
+
+INSERT INTO Order_Items(order_id, product_id, quantity, subtotal)
+VALUES
+(1, 1, 2, 298.00),
+(1, 2, 3, 387.00);
+
+SELECT * FROM orders
+where order_id = 1;
+
+SELECT * FROM Orders;
