@@ -220,3 +220,6 @@ SELECT * FROM orders
 where order_id = 1;
 
 SELECT * FROM Orders;
+
+SELECT * FROM order_items
+WHERE order_id = 1;

@@ -199,3 +199,31 @@ CREATE TRIGGER trg_deduct_inventory
 AFTER INSERT ON Order_Items
 FOR EACH ROW
 EXECUTE FUNCTION deduct_inventory();
+
+-- ORDER TOTAL VALUE UPDATE FUNCTION
+
+CREATE OR REPLACE FUNCTION update_order_total()
+RETURNS TRIGGER AS $$
+BEGIN
+
+    UPDATE Orders 
+    SET total_amount =
+    (
+        SELECT COALESCE(SUM(subtotal), 0)
+        FROM Order_Items
+        WHERE order_id = COALESCE(NEW.order_id, OLD.order_id)
+    )
+    WHERE order_id = COALESCE(NEW.order_id, OLD.order_id);
+
+    RETURN NULL;
+
+END;
+$$ LANGUAGE plpgsql;
+
+-- ORDER TOTAL VALUE TRIGGER
+
+CREATE TRIGGER trg_update_order_total
+AFTER INSERT OR UPDATE OR DELETE 
+ON Order_Items
+FOR EACH ROW
+EXECUTE FUNCTION update_order_total();

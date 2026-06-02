@@ -8,7 +8,7 @@
             "driver": "PostgreSQL",
             "name": "PG Local",
             "username": "postgres",
-            "database": "cooroo"
+            "database": "db_project"
         }
     ]
 }
