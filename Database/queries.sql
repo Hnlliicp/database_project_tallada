@@ -209,8 +209,19 @@ ORDER BY estimated_remaining ASC;
 
 -- Inventory Deduction Function Queries -----------------------------------------------
 
-SELECT * FROM inventory
+-- 1st Step: See ingredient names for Party Tray Chicken Wings (40 pcs) 
+-- Chicken (wings), Cooking Oil, and Signature Wing Sauce
 
+SELECT ingredient_name, stock_quantity FROM inventory
+WHERE inventory_id IN (1, 21, 3);
+
+-- 2nd Step: Insert order of Party Tray Chicken Wings (40 pcs)
+INSERT INTO Order_Items(order_id, product_id, quantity, subtotal) VALUES
+(1, 16, 1, 1689.00);
+
+-- 3rd Step: Run Inventory and check if Ingredient stock_quantity is deducted
+SELECT ingredient_name, stock_quantity FROM inventory
+WHERE inventory_id IN (1, 21, 3);
 
 -- Order Update, Insert & Delete Function Queries -------------------------------------
 
