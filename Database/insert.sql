@@ -165,35 +165,7 @@ VALUES
 ('Fresh Grains Trading',        '09223334444'),
 ('Metro Beverage Distributor',  '09335556666');
 
-
--- ============================================================
 -- INVENTORY
--- New ingredients added to support the full menu.
--- Existing inventory_ids kept where possible; new ones appended.
---
--- inventory_id  ingredient
--- 1   Chicken Breast / Boneless Chicken
--- 2   Rice
--- 3   Cooking Oil
--- 4   Potatoes (Fries)
--- 5   Cheese Sauce
--- 6   Softdrink Syrup (Coke)
--- 7   Iced Tea Concentrate
--- 8   Macaroni
--- 9   Java Rice Mix
--- 10  Burger Bun
--- 11  Burger Sauce / Condiments (ketchup, mayo, mustard)
--- 12  Lettuce
--- 13  Tomato
--- 14  Cucumber
--- 15  Onion
--- 16  Cheddar Cheese (sliced)
--- 17  Bacon
--- 18  BBQ Sauce
--- 19  Chicken Skin (for Crunches)
--- 20  Seasoning / Flavor Powder (fries & crunches)
--- 21  Signature Sauce (wings sauce blend)
--- ============================================================
 
 INSERT INTO Inventory (supplier_id, ingredient_name, category, unit_of_measurement, stock_quantity, reorder_level)
 VALUES
