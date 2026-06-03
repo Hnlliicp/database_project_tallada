@@ -267,9 +267,9 @@ INSERT INTO Orders (customer_id, status)
 VALUES ((SELECT customer_id FROM Customer WHERE name = 'Test Customer'),'Pending');
 
 -- Step 1C: Insert an order item — this should fire trg_deduct_inventory function
-VALUES (
-    (SELECT order_id FROM Orders WHERE customer_id =
-        (SELECT customer_id FROM Customer WHERE name = 'Test Customer') LIMIT 1), 1, 2, 318.00);
+
+INSERT INTO Order_Items(order_id, product_id, quantity, subtotal) VALUES
+(13, 1, 2, 318.00);
 
 -- Step 1D: CHECK — stock should have decreased for ingredients of product 1
 -- (Chicken Breast, Burger Bun, Burger Sauce, Cooking Oil, Softdrink Syrup) 
@@ -314,6 +314,8 @@ WHERE order_id = (
         (SELECT customer_id FROM Customer WHERE name = 'Test Customer') LIMIT 1
 )
 AND product_id = 1;
+
+-- Step 3B: See if the Inventory Ingredient Quantities come back to before
 
 SELECT i.inventory_id, i.ingredient_name, i.stock_quantity
 FROM Inventory i
@@ -379,13 +381,9 @@ WHERE inventory_id = 1;
 
 -- Step 5C: Insert purchase order item — fires trg_restock_inventory_on_purchase
 INSERT INTO Purchase_Order_Items (purchase_order_id, inventory_id, quantity, unit_cost, subtotal)
-VALUES (
-    (SELECT purchase_order_id FROM Purchase_Order ORDER BY purchase_order_id DESC LIMIT 1),
-    1,       -- inventory_id 1 = Chicken Breast
-    10.00,   -- restocking 10 kg
-    200.00,
-    2000.00
-);
+VALUES ((SELECT purchase_order_id FROM Purchase_Order 
+    ORDER BY purchase_order_id DESC LIMIT 1),
+    1, 10.00, 200.00, 2000.00);
 
 -- Step 5D: CHECK — Chicken Breast stock should have increased by 10
 SELECT inventory_id, ingredient_name, stock_quantity
