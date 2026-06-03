@@ -242,3 +242,191 @@ WHERE order_id = 1;
 -- 4th Step: Check if total amount is updated in Orders where order_id = 1
 SELECT * FROM orders
 where order_id = 1;
+
+
+
+-- Inventory Deduction Function
+-- Quick look at starting stock before any test
+
+SELECT inventory_id, ingredient_name, stock_quantity
+FROM Inventory
+ORDER BY inventory_id;
+
+
+-- TEST 1: trg_deduct_inventory
+-- Trigger: AFTER INSERT ON Order_Items
+-- Expected: Stock of ingredients used by product_id 1
+--           (Classic Crispy Chicken Burger w/ Coke) should DROP.
+
+-- Step 1A: Insert a test customer
+INSERT INTO Customer (name, contact_number, complete_address)
+VALUES ('Test Customer', '09990001111', 'Imus, Cavite');
+
+-- Step 1B: Insert a test order for that customer
+INSERT INTO Orders (customer_id, status)
+VALUES ((SELECT customer_id FROM Customer WHERE name = 'Test Customer'),'Pending');
+
+-- Step 1C: Insert an order item — this should fire trg_deduct_inventory function
+VALUES (
+    (SELECT order_id FROM Orders WHERE customer_id =
+        (SELECT customer_id FROM Customer WHERE name = 'Test Customer') LIMIT 1), 1, 2, 318.00);
+
+-- Step 1D: CHECK — stock should have decreased for ingredients of product 1
+-- (Chicken Breast, Burger Bun, Burger Sauce, Cooking Oil, Softdrink Syrup) 
+-- Basically the Ingredients used for Classic Crispy Chicken Burger w/ Coke
+SELECT i.inventory_id, i.ingredient_name, i.stock_quantity
+FROM Inventory i
+JOIN Product_Ingredient pi ON i.inventory_id = pi.inventory_id
+WHERE pi.product_id = 1
+ORDER BY i.inventory_id;
+
+
+-- TEST 2: trg_adjust_inventory_on_order_update
+-- Trigger: AFTER UPDATE ON Order_Items
+-- Expected: Stock adjusts — reverses qty 2, applies qty 4.
+--           Ingredients should be deducted by 2 more (net difference).
+
+-- Step 2A: Update the order item quantity from 2 to 4
+UPDATE Order_Items
+SET quantity = 4, subtotal = 636.00
+WHERE order_id = (
+    SELECT order_id FROM Orders WHERE customer_id =
+        (SELECT customer_id FROM Customer WHERE name = 'Test Customer') LIMIT 1
+)
+AND product_id = 1;
+
+-- Step 2B: CHECK — stock should have decreased by 2 more units worth
+SELECT i.inventory_id, i.ingredient_name, i.stock_quantity
+FROM Inventory i
+JOIN Product_Ingredient pi ON i.inventory_id = pi.inventory_id
+WHERE pi.product_id = 1
+ORDER BY i.inventory_id;
+
+
+-- TEST 3: trg_restore_inventory_on_order_delete
+-- Trigger: AFTER DELETE ON Order_Items
+-- Expected: Stock goes BACK UP by the qty 4 that was deducted.
+
+-- Step 3A: Delete the order item (simulating cancellation)
+DELETE FROM Order_Items
+WHERE order_id = (
+    SELECT order_id FROM Orders WHERE customer_id =
+        (SELECT customer_id FROM Customer WHERE name = 'Test Customer') LIMIT 1
+)
+AND product_id = 1;
+
+SELECT i.inventory_id, i.ingredient_name, i.stock_quantity
+FROM Inventory i
+JOIN Product_Ingredient pi ON i.inventory_id = pi.inventory_id
+WHERE pi.product_id = 1
+ORDER BY i.inventory_id;
+
+
+-- TEST 4: trg_update_order_total
+-- Trigger: AFTER INSERT OR UPDATE OR DELETE ON Order_Items
+-- Expected: Orders.total_amount updates automatically.
+
+-- Step 4A: Add two items back to the order
+INSERT INTO Order_Items (order_id, product_id, quantity, subtotal)
+VALUES (
+    (SELECT order_id FROM Orders WHERE customer_id =
+        (SELECT customer_id FROM Customer WHERE name = 'Test Customer') LIMIT 1),
+    1, 1, 159.00   -- 1x Classic Crispy Chicken Burger
+);
+
+INSERT INTO Order_Items (order_id, product_id, quantity, subtotal)
+VALUES (
+    (SELECT order_id FROM Orders WHERE customer_id =
+        (SELECT customer_id FROM Customer WHERE name = 'Test Customer') LIMIT 1),
+    20, 1, 75.00   -- 1x Flavored Fries Snap
+);
+
+-- Step 4B: CHECK — total_amount should be 159 + 75 = 234.00
+SELECT o.order_id, o.total_amount
+FROM Orders o
+WHERE o.customer_id = (
+    SELECT customer_id FROM Customer WHERE name = 'Test Customer'
+);
+
+-- Step 4C: Delete one item and check total drops
+DELETE FROM Order_Items
+WHERE order_id = (
+    SELECT order_id FROM Orders WHERE customer_id =
+        (SELECT customer_id FROM Customer WHERE name = 'Test Customer') LIMIT 1
+)
+AND product_id = 20;
+
+-- Step 4D: CHECK — total_amount should now be 159.00 only
+SELECT o.order_id, o.total_amount
+FROM Orders o
+WHERE o.customer_id = (
+    SELECT customer_id FROM Customer WHERE name = 'Test Customer'
+);
+
+
+-- TEST 5: trg_restock_inventory_on_purchase
+-- Trigger: AFTER INSERT ON Purchase_Order_Items
+-- Expected: Stock of inventory_id 1 (Chicken Breast) should GO UP.
+
+-- Step 5A: Create a purchase order from supplier 1
+INSERT INTO Purchase_Order (supplier_id, total_amount, status)
+VALUES (1, 3000.00, 'Delivered');
+
+-- Step 5B: Check stock of Chicken Breast BEFORE restock
+SELECT inventory_id, ingredient_name, stock_quantity
+FROM Inventory
+WHERE inventory_id = 1;
+
+-- Step 5C: Insert purchase order item — fires trg_restock_inventory_on_purchase
+INSERT INTO Purchase_Order_Items (purchase_order_id, inventory_id, quantity, unit_cost, subtotal)
+VALUES (
+    (SELECT purchase_order_id FROM Purchase_Order ORDER BY purchase_order_id DESC LIMIT 1),
+    1,       -- inventory_id 1 = Chicken Breast
+    10.00,   -- restocking 10 kg
+    200.00,
+    2000.00
+);
+
+-- Step 5D: CHECK — Chicken Breast stock should have increased by 10
+SELECT inventory_id, ingredient_name, stock_quantity
+FROM Inventory
+WHERE inventory_id = 1;
+
+
+-- TEST 6: trg_adjust_inventory_on_purchase_update
+-- Trigger: AFTER UPDATE ON Purchase_Order_Items
+-- Expected: Old qty (10) is reversed, new qty (15) is applied.
+--           Net change = +5 more kg of Chicken Breast.
+
+-- Step 6A: Update the purchase order item quantity from 10 to 15
+UPDATE Purchase_Order_Items
+SET quantity = 15.00, subtotal = 3000.00
+WHERE purchase_order_id = (
+    SELECT purchase_order_id FROM Purchase_Order ORDER BY purchase_order_id DESC LIMIT 1
+)
+AND inventory_id = 1;
+
+-- Step 6B: CHECK — Chicken Breast stock should have gone up by 5 more
+SELECT inventory_id, ingredient_name, stock_quantity
+FROM Inventory
+WHERE inventory_id = 1;
+
+
+-- CLEANUP ONLY!! FOR FUNCTION TEST REMOVAL!!
+
+DELETE FROM Orders
+WHERE customer_id = (
+    SELECT customer_id FROM Customer WHERE name = 'Test Customer'
+);
+
+DELETE FROM Customer WHERE name = 'Test Customer';
+
+DELETE FROM Purchase_Order_Items
+WHERE purchase_order_id = (
+    SELECT purchase_order_id FROM Purchase_Order ORDER BY purchase_order_id DESC LIMIT 1
+);
+
+DELETE FROM Purchase_Order
+WHERE purchase_order_id = (
+    SELECT purchase_order_id FROM Purchase_Order ORDER BY purchase_order_id DESC LIMIT 1
+);

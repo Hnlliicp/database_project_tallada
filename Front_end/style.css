@@ -515,6 +515,9 @@
     font-family: var(--font-head);
     font-size: 1.4rem;
     color: #fff;
+    height: 40px;
+    width: auto;
+    object-fit: contain;
   }
   footer .foot-links { display: flex; gap: 24px; flex-wrap: wrap; }
   footer .foot-links a { color: rgba(255,255,255,0.55); text-decoration: none; transition: color 0.2s; }

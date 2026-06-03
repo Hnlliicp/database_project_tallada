@@ -61,9 +61,10 @@
     </div>
     <div class="filter-bar">
       <button class="filter-btn active" onclick="filterProducts('all', this)">All</button>
-      <button class="filter-btn" onclick="filterProducts('meals', this)">Meals</button>
-      <button class="filter-btn" onclick="filterProducts('snacks', this)">Snacks</button>
-      <button class="filter-btn" onclick="filterProducts('drinks', this)">Drinks</button>
+      <button class="filter-btn" onclick="filterProducts('burgermeals', this)">Burger Meals</button>
+      <button class="filter-btn" onclick="filterProducts('solobowls', this)">Solo Bowls</button>
+      <button class="filter-btn" onclick="filterProducts('wings&boneless', this)">Wings & Boneless</button>
+      <button class="filter-btn" onclick="filterProducts('fries&crunches', this)">Fries & Crunches</button>
     </div>
   </div>
 
@@ -185,14 +186,22 @@
         </li>
       </ul>
       <div class="contact-cards">
-        <div class="contact-card">
-          <div class="cc-label">📘 Facebook Page</div>
-          <div class="cc-val">Coo Roo Official</div>
-        </div>
-        <div class="contact-card">
-          <div class="cc-label">📞 Call / Text</div>
-          <div class="cc-val">09XX-XXX-XXXX</div>
-        </div>
+    <div class="contact-card">
+      <div class="cc-label">📘 Facebook Page</div>
+      <div class="cc-val">
+        <a href="https://www.facebook.com/profile.php?id=61587336260539" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          style="color:#fff; text-decoration:underline;">
+          Coo Roo Official
+        </a>
+      </div>
+    </div>
+    <div class="contact-card">
+      <div class="cc-label">📞 Call / Text</div>
+      <div class="cc-val">09XX-XXX-XXXX</div>
+  </div>
+</div>
       </div>
     </div>
   </div>
@@ -201,20 +210,22 @@
 <!-- ── ABOUT ── -->
 <section id="about">
   <div class="about-grid reveal">
-    <div class="about-visual">🏠</div>
+    <div class="about-visual">
+      <img src="Images/Profile Logo.png" class="about-visual" alt="Coo Roo Logo">
+    </div>
     <div class="about-content">
       <div class="section-tag">About Coo Roo</div>
       <h2 class="section-title">A Family Business, Made with ❤️</h2>
       <p class="section-sub" style="margin-bottom:1rem;">
-        Coo Roo started as a small family venture — cooking up our favorite homemade snacks and meals to share with the community. We operate fully online, taking orders through our Facebook page and website, and our very own delivery rider brings everything straight to your doorstep.
+        Coo Roo started as a small family venture — cooking up our favorite homemade snacks and meals to share with the community. We operate fully online, taking orders through our Facebook page and website, and our very own delivery rider – or your preferred Delivery Service will bring everything straight to your doorstep.
       </p>
       <p class="section-sub">
         No big restaurants, no middlemen — just real food made with love, delivered by people who care. We're proud of every order we send out and thankful for every customer who trusts us.
       </p>
       <div class="value-pills">
-        <span class="value-pill">🏡 Family-Run</span>
+        <span class="value-pill">🏡 Family-Run Business</span>
         <span class="value-pill">🛵 Own Delivery</span>
-        <span class="value-pill">🌐 Cloud-Based</span>
+        <span class="value-pill">🌐 Cloud-Based Business</span>
         <span class="value-pill">💛 Made with Love</span>
         <span class="value-pill">📱 Order Online</span>
       </div>
@@ -224,7 +235,7 @@
 
 <!-- ── FOOTER ── -->
 <footer>
-  <div class="foot-logo">🐾 Coo Roo</div>
+  <img src="Images/Coo Roo Logo Text.png" class="foot-logo" alt="Coo Roo Bonless Chicken Image">
   <div class="foot-links">
     <a href="#home">Home</a>
     <a href="#products">Menu</a>
@@ -239,25 +250,52 @@
 
 <script>
   const products = [
-    { id:1, name:"Pork BBQ Skewer", desc:"Charcoal-grilled marinated pork, sweet-savory glaze.", price:"₱25", cat:"snacks", emoji:"🍢", badge:"Best Seller" },
-    { id:2, name:"Chicken Inasal Meal", desc:"Juicy grilled chicken with garlic rice & sawsawan.", price:"₱120", cat:"meals", emoji:"🍗", badge:"" },
-    { id:3, name:"Pork Sisig Meal", desc:"Sizzling sisig with egg & steamed rice.", price:"₱135", cat:"meals", emoji:"🍳", badge:"New" },
-    { id:4, name:"Fishball Stick (10pcs)", desc:"Golden-fried fishballs with your choice of sauce.", price:"₱30", cat:"snacks", emoji:"🟡", badge:"" },
-    { id:5, name:"Kwek Kwek (5pcs)", desc:"Battered quail eggs, crispy orange coating.", price:"₱25", cat:"snacks", emoji:"🟠", badge:"" },
-    { id:6, name:"Pork Siomai (6pcs)", desc:"Steamed pork dumplings with soy sauce & calamansi.", price:"₱60", cat:"snacks", emoji:"🥟", badge:"Best Seller" },
-    { id:7, name:"Iced Gulaman", desc:"Refreshing sweet black jelly drink.",  price:"₱20", cat:"drinks", emoji:"🧃", badge:"" },
-    { id:8, name:"Buko Juice (1L)", desc:"Fresh young coconut juice, naturally sweet.", price:"₱45", cat:"drinks", emoji:"🥥", badge:"Fresh" },
+    // –– BURGER MEALS ––––––––––––––––––––––––––––––––––––––––––
+    { id:1,  name:"Classic Crispy Chicken Burger w/ Coke",   desc:"Crispy Fried Coo Roo Chicken Chunk with our signature burger sauce.",                                                                           price:"₱159.00",   cat:"burgermeals",    img:"images/burgermenu/classic-crispy-chicken-burger.jpg",    badge:"" },
+    { id:2,  name:"Classic CC Burger w/ Fries & Coke",       desc:"Smoky BBQ sauce, crispy bacon, melted cheddar, and caramelized onions.",                                                                        price:"₱229.00",   cat:"burgermeals",    img:"images/Burgermenu/Classic CC Burger with Fries.jpg",      badge:"" },
+    { id:3,  name:"Classic CC Burger w/ Crunches & Coke",    desc:"Crispy Fried Coo Roo Chicken Chunk with our signature burger sauce.",                                                                           price:"₱269.00",   cat:"burgermeals",    img:"images/Burgermenu/Classic CC Burger with Crunches.jpg",   badge:"" },
+    { id:4,  name:"Ultimate Crispy Chicken Burger & Coke",   desc:"Crispy Fried Coo Roo Chicken Chunk with tomato, lettuce, cucumber, onion and our signature burger sauce.",                                      price:"₱199.00",   cat:"burgermeals",    img:"images/Burgermenu/Ultimate Crispy Chicken Burger.jpg",    badge:"Best Seller" },
+    { id:5,  name:"Ultimate CC Burger w/ Fries & Coke",      desc:"Ultimate Crispy Fried Coo Roo Crispy Chicken burger with Crispy Flavored Fries.",                                                               price:"₱279.00",   cat:"burgermeals",    img:"images/Burgermenu/Ultimate CC Burger with Fries.jpg",     badge:"" },
+    { id:6,  name:"Ultimate CC Burger w/ Crunches & Coke",   desc:"Ultimate Crispy Fried Coo Roo Crispy Chicken burger with flavored Crispy chicken skin.",                                                        price:"₱309.00",   cat:"burgermeals",    img:"images/Burgermenu/Ultimate CC Burger with Crunches.jpg",  badge:"" },
+
+    // ── WINGS & BONELESS ──────────────────────────────────────
+    { id:7,  name:"Solo Boneless Chicken w/ Drink",           desc:"Boneless chicken meal for 1 person with your choice of 1–2 signature sauces and a drink.",                                                   price:"₱194.00",  cat:"wings&boneless", img:"images/wings&boneless menu/solo.jpg",              badge:"" },
+    { id:8,  name:"Duo Boneless Chicken w/ Drink",            desc:"Boneless chicken meal for 2–3 persons with your choice of 1–2 signature sauces and a drink.",                                                price:"₱294.00",  cat:"wings&boneless", img:"images/wings&boneless menu/duo.jpg",               badge:"" },
+    { id:9,  name:"Barkada Tray Boneless Chicken",            desc:"Boneless chicken tray for 4–5 persons with your choice of 1–2 signature sauces.",                                                            price:"₱449.00",  cat:"wings&boneless", img:"images/wings&boneless menu/barkada tray.jpg",            badge:"" },
+    { id:10, name:"Family Tray Boneless Chicken",             desc:"Boneless chicken tray for 6–8 persons with up to 4 signature sauces.",                                                                        price:"₱799.00",  cat:"wings&boneless", img:"images/wings&boneless menu/family tray.jpg",             badge:"" },
+    { id:11, name:"Party Tray Boneless Chicken",              desc:"Boneless chicken tray for 15–20 persons with up to 4 signature sauces.",                                                                      price:"₱1,569.00", cat:"wings&boneless", img:"images/wings&boneless menu/party tray.jpg",             badge:"" },
+    { id:12, name:"Solo Chicken Wings w/ Drink",              desc:"4-piece chicken wings with your choice of 1–2 signature sauces and a drink.",                                                                 price:"₱214.00",  cat:"wings&boneless", img:"images/wings&boneless menu/solo.jpg",                 badge:"" },
+    { id:13, name:"Duo Chicken Wings w/ Drink",               desc:"8-piece chicken wings with your choice of 1–2 signature sauces and a drink.",                                                                 price:"₱374.00",  cat:"wings&boneless", img:"images/wings&boneless menu/duo.jpg",                  badge:"" },
+    { id:14, name:"Barkada Tray Chicken Wings",               desc:"12-piece chicken wings with your choice of 1–2 signature sauces.",                                                                            price:"₱499.00",  cat:"wings&boneless", img:"images/wings&boneless menu/barkada tray.jpg",               badge:"" },
+    { id:15, name:"Family Tray Chicken Wings",                desc:"20-piece chicken wings with up to 4 signature sauces.",                                                                                        price:"₱839.00",  cat:"wings&boneless", img:"images/wings&boneless menu/family tray.jpg",                badge:"" },
+    { id:16, name:"Party Tray Chicken Wings",                 desc:"40-piece chicken wings with up to 4 signature sauces.",                                                                                        price:"₱1,689.00", cat:"wings&boneless", img:"images/wings&boneless menu/party tray.jpg",                badge:"" },
+  
+    // ── SOLO BOWLS ────────────────────────────────────────────
+    { id:17, name:"Java Rice + Chicken w/ Drink",             desc:"Flavorful java rice topped with crispy boneless chicken tossed and drizzled with your choice of signature sauces, served with a drink.",     price:"₱199.00",  cat:"solobowls",      img:"images/solo bowls/java rice with chicken.jpg",           badge:"" },
+    { id:18, name:"Fries + Chicken w/ Drink",                 desc:"Crispy fries topped with crispy boneless chicken tossed and drizzled with your choice of signature sauces, served with a drink.",            price:"₱219.00",  cat:"solobowls",      img:"images/solo bowls/fries with chicken.jpg",               badge:"" },
+    { id:19, name:"Mac & Cheese + Chicken w/ Drink",          desc:"Creamy macaroni and cheese topped with crispy boneless chicken tossed and drizzled with your choice of signature sauces, served with a drink.", price:"₱229.00", cat:"solobowls",     img:"images/solo bowls/mac&cheese with chicken.jpg",          badge:"New" },
+  
+    // ── FRIES & CRUNCHES ──────────────────────────────────────
+    { id:20, name:"Flavored Fries Snap",                      desc:"Small serving of flavored crispy fries.",                                                                                                      price:"₱75.00",   cat:"fries&crunches", img:"images/fries & crunches menu/flavored fries.jpg",              badge:"" },
+    { id:21, name:"Flavored Fries Pop",                       desc:"Regular serving of flavored crispy fries.",                                                                                                    price:"₱99.00",   cat:"fries&crunches", img:"images/fries & crunches menu/flavored fries.jpg",               badge:"" },
+    { id:22, name:"Flavored Fries Max",                       desc:"Large serving of flavored crispy fries.",                                                                                                      price:"₱149.00",  cat:"fries&crunches", img:"images/fries & crunches menu/flavored fries.jpg",               badge:"" },
+    { id:23, name:"Flavored Fries Feast Tub",                 desc:"Sharing-size tub of flavored crispy fries.",                                                                                                   price:"₱199.00",  cat:"fries&crunches", img:"images/fries & crunches menu/flavored fries.jpg",         badge:"" },
+    { id:24, name:"Flavored Fries Monster Tub",               desc:"Extra-large tub of flavored crispy fries for groups.",                                                                                         price:"₱249.00",  cat:"fries&crunches", img:"images/fries & crunches menu/flavored fries.jpg",       badge:"" },
+    { id:25, name:"Drizzled Fries Pop",                       desc:"Crispy fries topped with your choice of 1–2 signature sauces.",                                                                               price:"₱139.00",  cat:"fries&crunches", img:"images/fries & crunches menu/drizzled fries.jpg",               badge:"" },
+    { id:26, name:"Drizzled Fries Max",                       desc:"Large serving of crispy fries topped with your choice of 1–2 signature sauces.",                                                              price:"₱169.00",  cat:"fries&crunches", img:"images/fries & crunches menu/drizzled fries.jpg",               badge:"" },
+    { id:27, name:"Crunches Regular",                         desc:"Crispy chicken skin snack available in Plain, Cheese, BBQ, or Sour Cream Cajun flavor.",                                                      price:"₱129.00",  cat:"fries&crunches", img:"images/fries & crunches menu/crunches.jpg",                 badge:"" },
+    { id:28, name:"Crunches Large",                           desc:"Large serving of crispy chicken skin snack available in Plain, Cheese, BBQ, or Sour Cream Cajun flavor.",                                     price:"₱189.00",  cat:"fries&crunches", img:"images/fries & crunches menu/crunches.jpg",                   badge:"" },
   ];
 
   let currentFilter = 'all';
 
-  function renderProducts(filter) {
+ function renderProducts(filter) {
     const grid = document.getElementById('products-grid');
     const filtered = filter === 'all' ? products : products.filter(p => p.cat === filter);
     grid.innerHTML = filtered.map(p => `
       <div class="product-card reveal" data-cat="${p.cat}">
         <div class="product-img">
-          <span>${p.emoji}</span>
+          <img src="${p.img}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;" />
           ${p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
         </div>
         <div class="product-info">
@@ -284,7 +322,9 @@
     const wrap = document.getElementById('order-items-checkboxes');
     wrap.innerHTML = products.map(p => `
       <label class="item-check-label">
-        <input type="checkbox" value="${p.name}" /> ${p.emoji} ${p.name}
+        <input type="checkbox" value="${p.name}" />
+        <img src="${p.img}" alt="${p.name}" style="width:20px;height:20px;object-fit:cover;border-radius:4px;" />
+        ${p.name}
       </label>
     `).join('');
   }

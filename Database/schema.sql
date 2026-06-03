@@ -172,58 +172,162 @@ CREATE TABLE Purchase_Order_Items (
         ON DELETE CASCADE
 );
 
--- INVENTORY DEDUCTION FUNCTION
-
+-- TRIGGER 1: DEDUCT INVENTORY WHEN AN ORDER ITEM IS INSERTED
+-- This Fires on INSERT into Order_Items.
+-- It then DEDUCTS stock based on quantity_required per ingredient.
+ 
 CREATE OR REPLACE FUNCTION deduct_inventory()
 RETURNS TRIGGER AS $$
 BEGIN
-
     UPDATE Inventory
-    SET stock_quantity =
-        stock_quantity -
-        (Product_Ingredient.quantity_required * NEW.quantity)
-
-    FROM Product_Ingredient
-
-    WHERE Inventory.inventory_id = Product_Ingredient.inventory_id
-      AND Product_Ingredient.product_id = NEW.product_id;
-
+    SET stock_quantity = COALESCE(stock_quantity, 0) -
+                         (pi.quantity_required * NEW.quantity)
+    FROM Product_Ingredient pi
+    WHERE Inventory.inventory_id = pi.inventory_id
+      AND pi.product_id = NEW.product_id;
+ 
     RETURN NEW;
-
 END;
 $$ LANGUAGE plpgsql;
-
--- INVENTORY DEDUCTION TRIGGER
-
+ 
 CREATE TRIGGER trg_deduct_inventory
 AFTER INSERT ON Order_Items
 FOR EACH ROW
 EXECUTE FUNCTION deduct_inventory();
+ 
+ 
+-- TRIGGER 2: RESTORE THE INVENTORY WHEN AN ORDER ITEM IS UPDATED
+-- Fires on UPDATE into Order_Items.
+-- REVERSES the old quantity deduction, then applies the new one.
+-- Handles cases like quantity corrections or order edits.
+ 
+CREATE OR REPLACE FUNCTION adjust_inventory_on_order_update()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Step 1: Reverse the OLD quantity deduction
+    UPDATE Inventory
+    SET stock_quantity = COALESCE(stock_quantity, 0) +
+                         (pi.quantity_required * OLD.quantity)
+    FROM Product_Ingredient pi
+    WHERE Inventory.inventory_id = pi.inventory_id
+      AND pi.product_id = OLD.product_id;
+ 
+    -- Step 2: Apply the NEW quantity deduction
+    UPDATE Inventory
+    SET stock_quantity = COALESCE(stock_quantity, 0) -
+                         (pi.quantity_required * NEW.quantity)
+    FROM Product_Ingredient pi
+    WHERE Inventory.inventory_id = pi.inventory_id
+      AND pi.product_id = NEW.product_id;
+ 
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+ 
+CREATE TRIGGER trg_adjust_inventory_on_order_update
+AFTER UPDATE ON Order_Items
+FOR EACH ROW
+EXECUTE FUNCTION adjust_inventory_on_order_update();
+ 
+ 
+-- TRIGGER 3: RESTORE INVENTORY WHEN AN ORDER ITEM IS DELETED
+-- Fires on DELETE from Order_Items.
+-- Returns the stock that was consumed by the deleted order item.
+-- Handles order cancellations or removed items.
+ 
+CREATE OR REPLACE FUNCTION restore_inventory_on_order_delete()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE Inventory
+    SET stock_quantity = COALESCE(stock_quantity, 0) +
+                         (pi.quantity_required * OLD.quantity)
+    FROM Product_Ingredient pi
+    WHERE Inventory.inventory_id = pi.inventory_id
+      AND pi.product_id = OLD.product_id;
+ 
+    RETURN OLD;
+END;
+$$ LANGUAGE plpgsql;
+ 
+CREATE TRIGGER trg_restore_inventory_on_order_delete
+AFTER DELETE ON Order_Items
+FOR EACH ROW
+EXECUTE FUNCTION restore_inventory_on_order_delete();
+ 
+ 
+-- TRIGGER 4: RESTOCK INVENTORY WHEN A PURCHASE ORDER ITEM IS INSERTED
+-- Fires on INSERT into Purchase_Order_Items.
+-- Adds the received quantity directly to Inventory stock.
+-- Represents a supplier delivery / restock event.
+ 
+CREATE OR REPLACE FUNCTION restock_inventory_on_purchase()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE Inventory
+    SET stock_quantity = COALESCE(stock_quantity, 0) + NEW.quantity
+    WHERE inventory_id = NEW.inventory_id;
+ 
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+ 
+CREATE TRIGGER trg_restock_inventory_on_purchase
+AFTER INSERT ON Purchase_Order_Items
+FOR EACH ROW
+EXECUTE FUNCTION restock_inventory_on_purchase();
+ 
+ 
+-- TRIGGER 5: ADJUST INVENTORY WHEN A PURCHASE ORDER ITEM IS UPDATED
+-- Fires on UPDATE into Purchase_Order_Items.
+-- Reverses the old quantity added, then applies the corrected quantity.
+-- Handles cases like receiving a different amount than originally recorded.
 
--- ORDER TOTAL VALUE UPDATE FUNCTION
+ 
+CREATE OR REPLACE FUNCTION adjust_inventory_on_purchase_update()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Step 1: Reverse the OLD restocked quantity
+    UPDATE Inventory
+    SET stock_quantity = COALESCE(stock_quantity, 0) - OLD.quantity
+    WHERE inventory_id = OLD.inventory_id;
+ 
+    -- Step 2: Apply the NEW restocked quantity
+    UPDATE Inventory
+    SET stock_quantity = COALESCE(stock_quantity, 0) + NEW.quantity
+    WHERE inventory_id = NEW.inventory_id;
+ 
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+ 
+CREATE TRIGGER trg_adjust_inventory_on_purchase_update
+AFTER UPDATE ON Purchase_Order_Items
+FOR EACH ROW
+EXECUTE FUNCTION adjust_inventory_on_purchase_update();
+ 
+ 
 
+-- TRIGGER 6: UPDATE ORDER TOTAL ON ORDER ITEM INSERT/UPDATE/DELETE
+-- Keeps Orders.total_amount always in sync with Order_Items subtotals.
+
+ 
 CREATE OR REPLACE FUNCTION update_order_total()
 RETURNS TRIGGER AS $$
 BEGIN
-
-    UPDATE Orders 
-    SET total_amount =
-    (
+    UPDATE Orders
+    SET total_amount = (
         SELECT COALESCE(SUM(subtotal), 0)
         FROM Order_Items
         WHERE order_id = COALESCE(NEW.order_id, OLD.order_id)
     )
     WHERE order_id = COALESCE(NEW.order_id, OLD.order_id);
-
+ 
     RETURN NULL;
-
 END;
 $$ LANGUAGE plpgsql;
-
--- ORDER TOTAL VALUE TRIGGER
-
+ 
 CREATE TRIGGER trg_update_order_total
-AFTER INSERT OR UPDATE OR DELETE 
+AFTER INSERT OR UPDATE OR DELETE
 ON Order_Items
 FOR EACH ROW
 EXECUTE FUNCTION update_order_total();
