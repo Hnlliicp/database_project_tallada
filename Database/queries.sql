@@ -207,19 +207,27 @@ WHERE o.status = 'Completed'
 GROUP BY i.ingredient_name, i.unit_of_measurement, i.stock_quantity
 ORDER BY estimated_remaining ASC;
 
--- Inventory Deduction Function Queries
+-- Inventory Deduction Function Queries -----------------------------------------------
 
 SELECT * FROM inventory
 
+
+-- Order Update, Insert & Delete Function Queries -------------------------------------
+
+-- 1st Step: Run to see values of order_id = 1 before customer insert
+SELECT * FROM orders
+where order_id = 1; 
+
+-- 2nd Step: Insert 2 products in the customers order (order_id = 1)
 INSERT INTO Order_Items(order_id, product_id, quantity, subtotal)
 VALUES
 (1, 1, 2, 298.00),
 (1, 2, 3, 387.00);
 
-SELECT * FROM orders
-where order_id = 1;
-
-SELECT * FROM Orders;
-
+-- 3rd Step: Check if Products are successfully updated inside order_items list (order_id = 1) 
 SELECT * FROM order_items
 WHERE order_id = 1;
+
+-- 4th Step: Check if total amount is updated in Orders where order_id = 1
+SELECT * FROM orders
+where order_id = 1;
