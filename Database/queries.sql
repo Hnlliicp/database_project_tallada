@@ -243,6 +243,55 @@ WHERE order_id = 1;
 SELECT * FROM orders
 where order_id = 1;
 
+-- One Payment per Order ---------------------------------------------------------------------
+
+-- First payment for order_id = 1
+SELECT payment_id, payment_method, amount_received, 
+change_due, payment_status FROM Payment
+WHERE order_id = 1;
+
+-- Attempt second payment for same order_id
+INSERT INTO Payment (order_id, payment_method, amount_received, 
+change_due, payment_status)
+VALUES (1, 'Cash', 200.00, 6.00, 'Paid');
+
+-- One Delivery per Order ---------------------------------------------------------------------
+
+-- First delivery for order_id = 1
+SELECT delivery_id, courier_type, delivery_address, delivery_status, delivery_fee FROM Delivery
+WHERE order_id = 1;
+
+-- Attempt second delivery for same order_id
+INSERT INTO Delivery (order_id, service_name, courier_type, delivery_address, delivery_status, delivery_fee)
+VALUES (1, 'Lalamove', 'Lalamove', 'Imus, Cavite', 'Preparing', 80.00);
+
+-- CHECK — Order_Items.quantity >= 1 --------------------------------------------------------------
+
+-- Attempt to insert order item with quantity 0
+INSERT INTO Order_Items (order_id, product_id, quantity, subtotal)
+VALUES (1, 1, 0, 0.00); 
+
+-- DEFAULT Orders.order_date ------------------------------------------------------------------------------
+
+-- Insert order without specifying order_date
+INSERT INTO Orders (customer_id, status, total_amount)
+VALUES (1, 'Pending', 500.00);
+
+SELECT order_id, order_date FROM Orders WHERE customer_id = 1 
+ORDER BY order_id DESC LIMIT 1;
+
+-- NOT NULL Customer.name ------------------------------------------------------------------------------
+
+-- Attempt to insert customer without name
+INSERT INTO Customer (name, contact_number, complete_address)
+VALUES (NULL, '09171234567', 'Imus, Cavite');
+
+-- FOREIGN KEY Orders.customer_id ------------------------------------------------------------------------------
+
+-- Attempt to insert order with non-existent customer_id
+INSERT INTO Orders (customer_id, order_date, status, total_amount)
+VALUES (999, '2026-05-26 10:00:00', 'Pending', 300.00);
+
 
 
 -- Inventory Deduction Function
