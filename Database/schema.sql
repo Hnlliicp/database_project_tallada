@@ -114,7 +114,7 @@ CREATE TABLE Inventory (
     category VARCHAR(50),
     unit_of_measurement VARCHAR(30),
 
-    stock_quantity DECIMAL(10,2) CHECK (stock_quantity >= 1),
+    stock_quantity DECIMAL(10,2) CHECK (stock_quantity >= 0),
     reorder_level DECIMAL(10,2),
 
     FOREIGN KEY (supplier_id)
