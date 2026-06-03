@@ -89,10 +89,10 @@ CREATE TABLE Payment (
 
     order_id INTEGER UNIQUE,
 
-    payment_method VARCHAR(50),
+    payment_method VARCHAR(50) DEFAULT 'Cash' CHECK (payment_method IN ('Cash', 'GCash', 'Bank Transfer')),
     amount_received DECIMAL(10,2),
     change_due DECIMAL(10,2),
-    payment_status VARCHAR(30),
+    payment_status VARCHAR(30) DEFAULT 'Unpaid' CHECK (payment_status IN ('Unpaid', 'Paid', 'Refunded')),
 
     FOREIGN KEY (order_id)
         REFERENCES Orders(order_id)
@@ -114,7 +114,7 @@ CREATE TABLE Inventory (
     category VARCHAR(50),
     unit_of_measurement VARCHAR(30),
 
-    stock_quantity DECIMAL(10,2),
+    stock_quantity DECIMAL(10,2) CHECK (stock_quantity >= 0),
     reorder_level DECIMAL(10,2),
 
     FOREIGN KEY (supplier_id)
