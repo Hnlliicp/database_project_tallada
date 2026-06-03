@@ -40,7 +40,7 @@ CREATE TABLE Orders (
     customer_id INTEGER,
 
     order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    status VARCHAR(30) DEFAULT 'Pending' CHECK (STATUS IN ('Pending', 'Completed', 'Cancelled')),
+    status VARCHAR(30) DEFAULT 'Pending' CHECK (status IN ('Pending', 'Completed', 'Cancelled')),
     total_amount DECIMAL(10,2),
 
     FOREIGN KEY (customer_id)
@@ -58,7 +58,7 @@ CREATE TABLE Delivery (
 
     courier_type VARCHAR(50),
     delivery_address TEXT,
-    delivery_status VARCHAR(30) CHECK (STATUS IN ('Pending', 'Out for Delivery', 'Delivered', 'Cancelled')),
+    delivery_status VARCHAR(30) DEFAULT 'Pending' CHECK (delivery_status IN ('Pending', 'Out for Delivery', 'Delivered', 'Cancelled')),
     delivery_fee DECIMAL(10,2),
 
     FOREIGN KEY (order_id)
