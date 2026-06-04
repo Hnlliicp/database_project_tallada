@@ -515,10 +515,10 @@ VALUES
 (6,  'Cash',          200.00,  1.00, 'Paid'),
 (7,  'GCash',         523.00,  0.00, 'Paid'),
 (8,  'Cash',          250.00, 21.00, 'Paid'),
-(9,  'COD',           350.00, 41.00, 'Paid'),
+(9,  'Cash',           350.00, 41.00, 'Paid'),
 (10, 'GCash',         199.00,  0.00, 'Paid'),
 (11, 'Cash',          100.00, 25.00, 'Paid'),
-(12, 'COD',             0.00,  0.00, 'Pending');
+(12, 'Cash',             0.00,  0.00, 'Pending');
 
 -- DELIVERY 
 INSERT INTO Delivery (order_id, service_name, contact_number, delivery_type,

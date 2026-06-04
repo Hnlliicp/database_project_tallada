@@ -92,7 +92,7 @@ CREATE TABLE Payment (
     payment_method VARCHAR(50) DEFAULT 'Cash' CHECK (payment_method IN ('Cash', 'GCash', 'Bank Transfer')),
     amount_received DECIMAL(10,2),
     change_due DECIMAL(10,2),
-    payment_status VARCHAR(30) DEFAULT 'Unpaid' CHECK (payment_status IN ('Unpaid', 'Paid', 'Refunded')),
+    payment_status VARCHAR(30) DEFAULT 'Unpaid' CHECK (payment_status IN ('Pending', 'Paid', 'Refunded')),
 
     FOREIGN KEY (order_id)
         REFERENCES Orders(order_id)
